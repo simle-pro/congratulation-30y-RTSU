@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="ru" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>30 лет Научной библиотеке РТСУ! — Торжественное поздравление</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        rtsu: {
+                            navy: '#050a18',
+                            dark: '#0a1128',
+                            indigo: '#101f42',
+                            gold: '#fbbf24',
+                            goldDark: '#d97706',
+                            goldLight: '#fef08a'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['Cormorant Garamond', 'Georgia', 'serif'],
+                        sans: ['Montserrat', 'Inter', 'sans-serif'],
+                        script: ['Great Vibes', 'cursive']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600;1,700&family=Great+Vibes&family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #050a18;
+            color: #f8fafc;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .font-serif {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+        }
+        .font-script {
+            font-family: 'Great Vibes', cursive;
+        }
+        
+        /* Gold gradient styling */
+        .gold-text {
+            background: linear-gradient(135deg, #fffbeb 0%, #fef08a 25%, #fbbf24 50%, #d97706 75%, #b45309 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .gold-border {
+            border-color: rgba(251, 191, 36, 0.35);
+        }
+        .gold-glow {
+            box-shadow: 0 0 25px rgba(251, 191, 36, 0.25);
+        }
+        .gold-glow-lg {
+            animation: pulseGlow 3s infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 20px rgba(251, 191, 36, 0.2), 0 0 40px rgba(217, 119, 6, 0.1); }
+            100% { box-shadow: 0 0 35px rgba(251, 191, 36, 0.5), 0 0 60px rgba(217, 119, 6, 0.3); }
+        }
+
+        /* Glassmorphism panel */
+        .glass-card {
+            background: rgba(16, 31, 66, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(251, 191, 36, 0.25);
+        }
+
+        /* Fireworks Overlay Canvas */
+        #fireworks-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 50;
+        }
+
+        /* Floating Golden Dust Particles */
+        .bg-particles {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, rgba(251, 191, 36, 0.4), rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 40px 70px, rgba(254, 240, 138, 0.3), rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 90px 40px, rgba(251, 191, 36, 0.5), rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 160px 120px, rgba(217, 119, 6, 0.4), rgba(0,0,0,0));
+            background-repeat: repeat;
+            background-size: 200px 200px;
+            opacity: 0.6;
+            animation: particleMove 20s linear infinite;
+        }
+
+        @keyframes particleMove {
+            0% { background-position: 0 0; }
+            100% { background-position: 200px 400px; }
+        }
+
+        /* Book Deck Page Transition Effect */
+        .book-page {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d97706;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-slate-950 pb-20">
+
+    <!-- Background Golden Dust -->
+    <div class="bg-particles"></div>
+
+    <!-- Fireworks & Celebration Canvas -->
+    <canvas id="fireworks-canvas"></canvas>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed top-4 left-1/2 transform -translate-x-1/2 -translate-y-32 opacity-0 transition-all duration-300 z-50 bg-amber-400 text-slate-950 px-5 py-3 rounded-2xl shadow-2xl font-bold flex items-center gap-3 text-xs sm:text-sm border border-amber-300">
+        <i class="fa-solid fa-crown text-lg text-amber-900"></i>
+        <span id="toast-message">С 30-летием библиотеки РТСУ!</span>
+    </div>
+
+    <!-- Top Navigation Header -->
+    <header class="sticky top-0 z-40 glass-card border-b border-amber-500/20 px-4 py-3">
+        <div class="max-w-md mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-600 via-amber-400 to-yellow-200 flex items-center justify-center text-slate-950 font-black shadow-lg shadow-amber-500/20">
+                    <span class="font-serif text-lg leading-none">30</span>
+                </div>
+                <div>
+                    <h1 class="font-serif font-bold text-base gold-text leading-none">Библиотека РТСУ</h1>
+                    <span class="text-[10px] text-amber-200/70 tracking-wider">Юбилейный портал • 30 Лет</span>
+                </div>
+            </div>
+            <button onclick="launchGrandFireworks()" class="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5 shadow-md shadow-amber-500/30 active:scale-95 transition-all">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                <span>Салют</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Mobile Content -->
+    <main class="w-full max-w-md mx-auto px-4 py-5 z-10 space-y-6 flex-grow">
+
+        <!-- GRAND 30TH ANNIVERSARY HERO BANNER -->
+        <section class="relative glass-card rounded-3xl p-6 text-center gold-glow-lg overflow-hidden border-2 gold-border">
+            <div class="absolute -right-10 -bottom-10 text-amber-500/10 font-serif text-[160px] font-bold leading-none pointer-events-none select-none">
+                30
+            </div>
+
+            <!-- Top Crown Badge -->
+            <div class="inline-flex items-center gap-2 bg-amber-500/15 border border-amber-400/40 px-3.5 py-1 rounded-full text-amber-300 text-xs font-semibold mb-3">
+                <i class="fa-solid fa-crown text-amber-400"></i>
+                <span>1996 — 2026 • СЛАВНЫЙ ЮБИЛЕЙ</span>
+            </div>
+
+            <!-- Big 30 Number Highlight -->
+            <div class="relative my-2">
+                <span class="font-serif text-7xl sm:text-8xl font-black gold-text tracking-tight block leading-none drop-shadow-xl">
+                    30 ЛЕТ
+                </span>
+                <span class="font-script text-2xl sm:text-3xl text-amber-200 block -mt-2">
+                    знания, мудрости и вдохновения!
+                </span>
+            </div>
+
+            <p class="text-xs text-slate-300 mt-3 leading-relaxed max-w-xs mx-auto">
+                Три десятилетия Научная библиотека Российско-Таджикского Славянского университета зажигает сердца и открывает горизонты науки!
+            </p>
+
+            <!-- Grand Salute Trigger Button -->
+            <div class="mt-5 pt-4 border-t border-amber-500/20 flex items-center justify-center gap-2">
+                <button onclick="launchGrandFireworks()" class="w-full bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:brightness-110 text-slate-950 font-extrabold py-3 px-4 rounded-2xl text-xs sm:text-sm shadow-xl shadow-amber-500/30 flex items-center justify-center gap-2 active:scale-95 transition-all">
+                    <i class="fa-solid fa-fireworks text-base"></i>
+                    <span>ЗАПУСТИТЬ САЛЮТ «С 30-ЛЕТИЕМ!»</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- 30-YEAR METRICS / STATS GRID -->
+        <section class="grid grid-cols-2 gap-3">
+            <div class="glass-card p-3.5 rounded-2xl text-center border gold-border">
+                <i class="fa-solid fa-hourglass-start text-amber-400 text-lg mb-1"></i>
+                <span class="block font-serif text-2xl font-bold gold-text">30 Лет</span>
+                <span class="text-[10px] text-slate-300">Истории и славных традиций</span>
+            </div>
+            <div class="glass-card p-3.5 rounded-2xl text-center border gold-border">
+                <i class="fa-solid fa-book-open text-amber-400 text-lg mb-1"></i>
+                <span class="block font-serif text-2xl font-bold gold-text">100 000+</span>
+                <span class="text-[10px] text-slate-300">Богатейший книжный фонд</span>
+            </div>
+            <div class="glass-card p-3.5 rounded-2xl text-center border gold-border">
+                <i class="fa-solid fa-user-graduate text-amber-400 text-lg mb-1"></i>
+                <span class="block font-serif text-2xl font-bold gold-text">50 000+</span>
+                <span class="text-[10px] text-slate-300">Благодарных читателей</span>
+            </div>
+            <div class="glass-card p-3.5 rounded-2xl text-center border gold-border">
+                <i class="fa-solid fa-laptop-code text-amber-400 text-lg mb-1"></i>
+                <span class="block font-serif text-2xl font-bold gold-text">100%</span>
+                <span class="text-[10px] text-slate-300">Цифровая эпоха и архивы</span>
+            </div>
+        </section>
+
+        <!-- INTERACTIVE BOOK / CONGRATULATORY DECK -->
+        <section class="glass-card rounded-3xl p-5 border-2 gold-border shadow-2xl relative">
+            <div class="flex items-center justify-between pb-3 border-b border-amber-500/20 mb-4">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-book-bookmark text-amber-400 text-base"></i>
+                    <h2 class="font-serif text-lg font-bold text-white">Юбилейная книга</h2>
+                </div>
+                <!-- Page indicator -->
+                <div class="flex items-center gap-1.5 text-xs text-amber-300 font-semibold bg-amber-500/10 px-2.5 py-1 rounded-full border border-amber-500/30">
+                    <span>Стр.</span>
+                    <span id="page-num">1</span>
+                    <span>/ 3</span>
+                </div>
+            </div>
+
+            <!-- PAGE 1: Solemn Congratulation -->
+            <div id="book-page-1" class="book-page space-y-3">
+                <div class="inline-block bg-amber-500/20 text-amber-300 text-[11px] font-bold px-2.5 py-0.5 rounded-md">
+                    Страница 1 • Поздравление
+                </div>
+                <h3 class="font-serif text-2xl font-bold gold-text leading-snug">
+                    Дорогая Научная библиотека РТСУ!
+                </h3>
+                <p class="text-xs text-slate-200 leading-relaxed">
+                    От всего сердца поздравляем руководство, ветеранов и всех сотрудников библиотеки с тридцатилетним юбилеем!
+                </p>
+                <p class="text-xs text-slate-200 leading-relaxed">
+                    За 30 лет вы создали не просто интеллектуальный центр университета, а настоящую обитель знаний, где каждое поколение студентов находит поддержку, мудрость и вдохновение для великих открытий.
+                </p>
+                <div class="pt-2 text-right">
+                    <span class="font-script text-xl text-amber-300 block">— Студенты и выпускники РТСУ</span>
+                </div>
+            </div>
+
+            <!-- PAGE 2: Historical Pride & Journey -->
+            <div id="book-page-2" class="book-page space-y-3 hidden">
+                <div class="inline-block bg-amber-500/20 text-amber-300 text-[11px] font-bold px-2.5 py-0.5 rounded-md">
+                    Страница 2 • 30 лет славной истории
+                </div>
+                <h3 class="font-serif text-2xl font-bold gold-text leading-snug">
+                    Гордость и достояние университета
+                </h3>
+                <p class="text-xs text-slate-200 leading-relaxed">
+                    Основанная вместе с университетом в 1996 году, библиотека прошла впечатляющий путь от первых книжных полок до мощного научно-информационного комплекса.
+                </p>
+                <ul class="text-xs text-slate-200 space-y-2 pt-1">
+                    <li class="flex items-start gap-2">
+                        <i class="fa-solid fa-check text-amber-400 mt-0.5"></i>
+                        <span>Уникальные редкие издания и академические труды.</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <i class="fa-solid fa-check text-amber-400 mt-0.5"></i>
+                        <span>Комфортные читальные залы и электронный каталог.</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <i class="fa-solid fa-check text-amber-400 mt-0.5"></i>
+                        <span>Заботливые библиотекари, готовые всегда прийти на помощь.</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- PAGE 3: Future & Wishes -->
+            <div id="book-page-3" class="book-page space-y-3 hidden">
+                <div class="inline-block bg-amber-500/20 text-amber-300 text-[11px] font-bold px-2.5 py-0.5 rounded-md">
+                    Страница 3 • Взгляд в будущее
+                </div>
+                <h3 class="font-serif text-2xl font-bold gold-text leading-snug">
+                    К новым вершинам и цифровым высотам!
+                </h3>
+                <p class="text-xs text-slate-200 leading-relaxed">
+                    Желаем нашей библиотеке непрерывного развития, пополнения фондов редчайшими книгами, внедрения передовых цифровых технологий и тысяч новых увлеченных читателей!
+                </p>
+                <p class="text-xs text-slate-200 leading-relaxed">
+                    Пусть в ваших стенах всегда царит гармония, уют и атмосфера больших научных свершений!
+                </p>
+            </div>
+
+            <!-- Page Navigation Controls -->
+            <div class="flex items-center justify-between pt-4 mt-4 border-t border-slate-800">
+                <button onclick="changePage(-1)" id="btn-prev-page" class="bg-slate-900 border border-slate-700 text-slate-400 px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center gap-1 opacity-50 cursor-not-allowed">
+                    <i class="fa-solid fa-chevron-left"></i>
+                    <span>Назад</span>
+                </button>
+                <div class="flex gap-1.5" id="page-dots">
+                    <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+                    <span class="w-2.5 h-2.5 rounded-full bg-slate-700"></span>
+                    <span class="w-2.5 h-2.5 rounded-full bg-slate-700"></span>
+                </div>
+                <button onclick="changePage(1)" id="btn-next-page" class="bg-gradient-to-r from-amber-600 to-amber-500 text-slate-950 px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1 shadow-md shadow-amber-600/20 active:scale-95">
+                    <span>Далее</span>
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- WISHES BOARD (localStorage) -->
+        <section class="glass-card rounded-3xl p-5 border gold-border shadow-xl space-y-4">
+            <div class="flex items-center justify-between pb-3 border-b border-amber-500/20">
+                <div>
+                    <h3 class="font-serif text-xl font-bold text-white">Стена пожеланий</h3>
+                    <span class="text-[11px] text-amber-300">Оставьте памятное поздравление к 30-летию</span>
+                </div>
+                <span id="wish-count" class="text-xs bg-amber-500/20 text-amber-300 font-bold px-2.5 py-1 rounded-full border border-amber-500/30">0</span>
+            </div>
+
+            <!-- Form -->
+            <form id="wish-form" onsubmit="handleWishSubmit(event)" class="space-y-3">
+                <input type="text" id="wish-author" required placeholder="Ваше имя / курс / факультет" class="w-full bg-slate-950/80 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-amber-400 transition-all">
+                <textarea id="wish-text" required rows="3" placeholder="Ваши теплые слова и пожелания библиотеке на 30-летие..." class="w-full bg-slate-950/80 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-amber-400 transition-all resize-none"></textarea>
+                <button type="submit" class="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold py-2.5 rounded-xl text-xs shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2 active:scale-95 transition-all">
+                    <i class="fa-solid fa-feather-pointed"></i>
+                    <span>Вписать пожелание в историю</span>
+                </button>
+            </form>
+
+            <!-- Interactive Wishes Stream -->
+            <div id="wishes-container" class="space-y-2.5 max-h-[260px] overflow-y-auto pr-1">
+                <!-- Dynamically populated -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer Copyright -->
+    <footer class="text-center py-4 text-[10px] text-slate-400 border-t border-amber-500/10">
+        <p>© 1996–2026 Научная библиотека РТСУ • 30 Лет Вместе</p>
+    </footer>
+
+    <!-- Mobile Sticky Navigation Bar -->
+    <nav class="fixed bottom-0 left-0 right-0 z-40 glass-card border-t border-amber-500/20 py-2 px-4 shadow-2xl">
+        <div class="max-w-md mx-auto grid grid-cols-3 gap-2">
+            <button onclick="scrollToTop()" class="flex flex-col items-center justify-center py-1 rounded-xl text-amber-400 bg-amber-500/10">
+                <i class="fa-solid fa-crown text-base"></i>
+                <span class="text-[10px] font-semibold mt-0.5">30 Лет</span>
+            </button>
+            <button onclick="launchGrandFireworks()" class="flex flex-col items-center justify-center py-1 rounded-xl text-amber-300 hover:text-amber-400">
+                <i class="fa-solid fa-wand-magic-sparkles text-base"></i>
+                <span class="text-[10px] font-semibold mt-0.5">Салют</span>
+            </button>
+            <button onclick="scrollToWishes()" class="flex flex-col items-center justify-center py-1 rounded-xl text-slate-300 hover:text-amber-400">
+                <i class="fa-solid fa-comments text-base"></i>
+                <span class="text-[10px] font-semibold mt-0.5">Пожелания</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Script Application Logic -->
+    <script>
+        // Page Navigation Logic for Interactive Book
+        let currentPage = 1;
+        const totalPages = 3;
+
+        function changePage(delta) {
+            const newPage = currentPage + delta;
+            if (newPage < 1 || newPage > totalPages) return;
+
+            document.getElementById(`book-page-${currentPage}`).classList.add('hidden');
+            currentPage = newPage;
+            document.getElementById(`book-page-${currentPage}`).classList.remove('hidden');
+
+            document.getElementById('page-num').innerText = currentPage;
+
+            // Update buttons state
+            const prevBtn = document.getElementById('btn-prev-page');
+            const nextBtn = document.getElementById('btn-next-page');
+
+            if (currentPage === 1) {
+                prevBtn.className = "bg-slate-900 border border-slate-700 text-slate-500 px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center gap-1 opacity-50 cursor-not-allowed";
+            } else {
+                prevBtn.className = "bg-slate-800 border border-amber-500/30 text-amber-300 px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center gap-1 active:scale-95";
+            }
+
+            if (currentPage === totalPages) {
+                nextBtn.className = "bg-slate-900 border border-slate-700 text-slate-500 px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center gap-1 opacity-50 cursor-not-allowed";
+            } else {
+                nextBtn.className = "bg-gradient-to-r from-amber-600 to-amber-500 text-slate-950 px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1 shadow-md shadow-amber-600/20 active:scale-95";
+            }
+
+            // Update Dots
+            const dotsContainer = document.getElementById('page-dots');
+            dotsContainer.innerHTML = '';
+            for (let i = 1; i <= totalPages; i++) {
+                const dot = document.createElement('span');
+                dot.className = `w-2.5 h-2.5 rounded-full ${i === currentPage ? 'bg-amber-400' : 'bg-slate-700'}`;
+                dotsContainer.appendChild(dot);
+            }
+        }
+
+        // Toast Notification Helper
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').innerText = msg;
+            toast.classList.remove('-translate-y-32', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('-translate-y-32', 'opacity-0');
+            }, 3200);
+        }
+
+        // Grand Fireworks Simulation with Canvas & Overlay Banner Text
+        function launchGrandFireworks() {
+            // Confetti Burst
+            confetti({
+                particleCount: 150,
+                spread: 120,
+                origin: { y: 0.5 },
+                colors: ['#fbbf24', '#fef08a', '#d97706', '#ffffff', '#3b82f6']
+            });
+
+            const canvas = document.getElementById('fireworks-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            let particles = [];
+            const colors = ['#fbbf24', '#fef08a', '#f59e0b', '#ffffff', '#60a5fa'];
+
+            // Multiple bursts
+            for (let i = 0; i < 4; i++) {
+                setTimeout(() => {
+                    createBurst(
+                        Math.random() * (canvas.width * 0.8) + (canvas.width * 0.1),
+                        Math.random() * (canvas.height * 0.4) + (canvas.height * 0.15)
+                    );
+                }, i * 300);
+            }
+
+            function createBurst(x, y) {
+                const count = 80;
+                for (let i = 0; i < count; i++) {
+                    const angle = Math.random() * Math.PI * 2;
+                    const speed = Math.random() * 7 + 2;
+                    particles.push({
+                        x: x,
+                        y: y,
+                        vx: Math.cos(angle) * speed,
+                        vy: Math.sin(angle) * speed,
+                        alpha: 1,
+                        decay: Math.random() * 0.015 + 0.008,
+                        color: colors[Math.floor(Math.random() * colors.length)],
+                        size: Math.random() * 3.5 + 1.5
+                    });
+                }
+            }
+
+            let animationFrame;
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                // Draw floating "С 30-ЛЕТИЕМ!" Text Effect
+                ctx.save();
+                ctx.font = 'bold 32px Cormorant Garamond, serif';
+                ctx.fillStyle = '#fef08a';
+                ctx.textAlign = 'center';
+                ctx.shadowColor = '#d97706';
+                ctx.shadowBlur = 15;
+                ctx.fillText('С 30-ЛЕТИЕМ!', canvas.width / 2, canvas.height * 0.25);
+                ctx.restore();
+
+                particles.forEach((p, idx) => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vy += 0.06; // Gravity
+                    p.alpha -= p.decay;
+
+                    ctx.save();
+                    ctx.globalAlpha = Math.max(p.alpha, 0);
+                    ctx.fillStyle = p.color;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.restore();
+
+                    if (p.alpha <= 0) {
+                        particles.splice(idx, 1);
+                    }
+                });
+
+                if (particles.length > 0) {
+                    animationFrame = requestAnimationFrame(animate);
+                } else {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                }
+            }
+
+            animate();
+            showToast('Ура! Грандиозный салют к 30-летию!');
+        }
+
+        // LocalStorage Wish Management
+        const defaultWishes = [
+            { author: "Ректорат и преподаватели РТСУ", text: "С 30-летием, родная библиотека! Пусть книжные фонды растут, а читатели всегда вдохновляются знаниями!", date: "14 окт 2026" },
+            { author: "Выпускник 2015 года", text: "Провел в ваших залах лучшие годы учебы. Спасибо сотрудникам за теплоту и помощь!", date: "14 окт 2026" },
+            { author: "Студенческий совет РТСУ", text: "Поздравляем сердце нашего университета с 30-летием! Желаем процветания и цифровых успехов!", date: "14 окт 2026" }
+        ];
+
+        function getWishes() {
+            const saved = localStorage.getItem('rtsu_library_wishes_30yrs');
+            if (!saved) {
+                localStorage.setItem('rtsu_library_wishes_30yrs', JSON.stringify(defaultWishes));
+                return defaultWishes;
+            }
+            try { return JSON.parse(saved); } catch(e) { return defaultWishes; }
+        }
+
+        function renderWishes() {
+            const wishes = getWishes();
+            const container = document.getElementById('wishes-container');
+            document.getElementById('wish-count').innerText = wishes.length;
+
+            container.innerHTML = '';
+            wishes.slice().reverse().forEach(w => {
+                const card = document.createElement('div');
+                card.className = 'bg-slate-950/90 p-3 rounded-xl border border-slate-800 space-y-1';
+                card.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <span class="font-semibold text-amber-300 text-xs">${escapeHtml(w.author)}</span>
+                        <span class="text-[9px] text-slate-500">${w.date}</span>
+                    </div>
+                    <p class="text-slate-300 text-xs leading-relaxed">${escapeHtml(w.text)}</p>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function handleWishSubmit(e) {
+            e.preventDefault();
+            const author = document.getElementById('wish-author').value.trim();
+            const text = document.getElementById('wish-text').value.trim();
+
+            if (!author || !text) return;
+
+            const newWish = {
+                author,
+                text,
+                date: new Date().toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', year: 'numeric' })
+            };
+
+            const wishes = getWishes();
+            wishes.push(newWish);
+            localStorage.setItem('rtsu_library_wishes_30yrs', JSON.stringify(wishes));
+
+            document.getElementById('wish-author').value = '';
+            document.getElementById('wish-text').value = '';
+
+            renderWishes();
+            showToast('Ваше поздравление записано!');
+            launchGrandFireworks();
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function scrollToWishes() {
+            document.getElementById('wish-form').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Initial launch on load
+        window.onload = function() {
+            renderWishes();
+            setTimeout(() => {
+                launchGrandFireworks();
+            }, 500);
+        };
+    </script>
+</body>
+</html>
